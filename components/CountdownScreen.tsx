@@ -9,6 +9,15 @@ interface CountdownScreenProps {
   onComplete: () => void
 }
 
+interface Star {
+  id: number
+  left: number
+  top: number
+  size: number
+  opacity: number
+  duration: number
+}
+
 export default function CountdownScreen({ targetDate, onComplete }: CountdownScreenProps) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -17,8 +26,23 @@ export default function CountdownScreen({ targetDate, onComplete }: CountdownScr
     seconds: 0
   })
   const [isComplete, setIsComplete] = useState(false)
+  const [stars, setStars] = useState<Star[]>([])
+  const [mounted, setMounted] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const starsRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setMounted(true)
+    const generatedStars = Array.from({ length: 50 }).map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      size: Math.random() * 4 + 2,
+      opacity: Math.random() * 0.8 + 0.2,
+      duration: Math.random() * 3 + 2
+    }))
+    setStars(generatedStars)
+  }, [])
 
   useEffect(() => {
     const target = new Date(targetDate).getTime()
@@ -60,9 +84,9 @@ export default function CountdownScreen({ targetDate, onComplete }: CountdownScr
   }, [targetDate, onComplete])
 
   useEffect(() => {
-    if (starsRef.current) {
-      const stars = starsRef.current.children
-      gsap.to(stars, {
+    if (starsRef.current && mounted) {
+      const starElements = starsRef.current.children
+      gsap.to(starElements, {
         opacity: 0.3,
         scale: 0.5,
         duration: 2,
@@ -73,23 +97,19 @@ export default function CountdownScreen({ targetDate, onComplete }: CountdownScr
         }
       })
     }
-  }, [])
+  }, [mounted, stars])
 
-  const generateStars = () => {
-    return Array.from({ length: 50 }).map((_, i) => (
-      <div
-        key={i}
-        className="absolute rounded-full bg-white"
+  if (!mounted) {
+    return (
+      <div 
+        className="fixed inset-0 z-50 flex items-center justify-center"
         style={{
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          width: `${Math.random() * 4 + 2}px`,
-          height: `${Math.random() * 4 + 2}px`,
-          opacity: Math.random() * 0.8 + 0.2,
-          animation: `twinkle ${Math.random() * 3 + 2}s ease-in-out infinite`
+          background: 'linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)'
         }}
-      />
-    ))
+      >
+        <div className="text-white text-2xl font-dancing">Loading your surprise...</div>
+      </div>
+    )
   }
 
   return (
@@ -104,7 +124,20 @@ export default function CountdownScreen({ targetDate, onComplete }: CountdownScr
       transition={{ duration: 1.5 }}
     >
       <div ref={starsRef} className="absolute inset-0">
-        {generateStars()}
+        {stars.map((star) => (
+          <div
+            key={star.id}
+            className="absolute rounded-full bg-white"
+            style={{
+              left: `${star.left}%`,
+              top: `${star.top}%`,
+              width: `${star.size}px`,
+              height: `${star.size}px`,
+              opacity: star.opacity,
+              animation: `twinkle ${star.duration}s ease-in-out infinite`
+            }}
+          />
+        ))}
       </div>
 
       <motion.div

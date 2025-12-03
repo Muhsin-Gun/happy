@@ -3,10 +3,20 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
+interface Heart {
+  id: number
+  left: number
+  delay: number
+  duration: number
+  size: number
+}
+
 export default function FloatingHearts() {
-  const [hearts, setHearts] = useState<Array<{ id: number; left: number; delay: number; duration: number; size: number }>>([])
+  const [hearts, setHearts] = useState<Heart[]>([])
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const newHearts = Array.from({ length: 25 }).map((_, i) => ({
       id: i,
       left: Math.random() * 100,
@@ -16,6 +26,8 @@ export default function FloatingHearts() {
     }))
     setHearts(newHearts)
   }, [])
+
+  if (!mounted) return null
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-10">
@@ -29,7 +41,7 @@ export default function FloatingHearts() {
             bottom: '-50px'
           }}
           animate={{
-            y: [0, -window.innerHeight - 100],
+            y: [0, -1200],
             x: [0, Math.sin(heart.id) * 50, 0],
             rotate: [0, 360],
             opacity: [0, 1, 1, 0]

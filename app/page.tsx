@@ -16,6 +16,11 @@ import MessageBottle from '@/components/MessageBottle'
 import FloatingBalloons from '@/components/FloatingBalloons'
 import HiddenLoveNotes from '@/components/HiddenLoveNotes'
 import FinaleSection from '@/components/FinaleSection'
+import HeartbeatLine from '@/components/HeartbeatLine'
+import ComplimentTicker from '@/components/ComplimentTicker'
+import InsideJokes from '@/components/InsideJokes'
+import PromiseJar from '@/components/PromiseJar'
+import DreamTrips from '@/components/DreamTrips'
 import { birthdayConfig } from '@/data/content'
 
 type PageState = 'countdown' | 'landing' | 'main'
@@ -42,6 +47,12 @@ export default function Home() {
     setTimeout(() => {
       setPageState('main')
     }, 1500)
+  }
+
+  const skipToMain = () => {
+    localStorage.setItem('birthday_unlocked', 'true')
+    setShowCurtain(false)
+    setPageState('main')
   }
 
   return (
@@ -117,10 +128,14 @@ export default function Home() {
               </motion.div>
             </section>
 
+            <ComplimentTicker />
+
             <StorySection 
               title={birthdayConfig.storyTitle}
               paragraphs={birthdayConfig.storyParagraphs}
             />
+
+            <HeartbeatLine name={birthdayConfig.herName} />
 
             <section className="py-20 px-4 relative overflow-hidden bg-gradient-to-b from-soft-pink to-lavender-blush">
               <div className="max-w-4xl mx-auto text-center">
@@ -182,13 +197,19 @@ export default function Home() {
 
             <PhotoGallery photos={birthdayConfig.photoPlaceholders} />
 
+            <InsideJokes />
+
             <ReasonsSection reasons={birthdayConfig.reasonsILoveYou} />
 
             <MessageBottle 
               message="My dearest love, every moment with you is a treasure. You are my sunshine, my happiness, and my forever. Thank you for being you. I love you more than words can say. 💕"
             />
 
+            <PromiseJar />
+
             <FloatingBalloons name={birthdayConfig.herName} />
+
+            <DreamTrips />
 
             <HiddenLoveNotes />
 
@@ -263,6 +284,20 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {pageState === 'countdown' && (
+        <motion.button
+          className="fixed bottom-5 left-5 z-[60] bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-lg text-sm"
+          onClick={skipToMain}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.6 }}
+          title="Skip countdown (for testing)"
+        >
+          Skip to Preview ⏭️
+        </motion.button>
+      )}
 
       <motion.button
         className="fixed bottom-20 right-5 z-50 bg-pink-500 text-white p-3 rounded-full shadow-lg"
