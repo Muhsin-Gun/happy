@@ -20,7 +20,7 @@ import HeartbeatLine from '@/components/HeartbeatLine'
 import ComplimentTicker from '@/components/ComplimentTicker'
 import InsideJokes from '@/components/InsideJokes'
 import PromiseJar from '@/components/PromiseJar'
-import DreamTrips from '@/components/DreamTrips'
+
 import { birthdayConfig } from '@/data/content'
 
 type PageState = 'countdown' | 'landing' | 'main'
@@ -239,8 +239,6 @@ export default function Home() {
             <PromiseJar />
 
             <FloatingBalloons name={birthdayConfig.herName} />
-
-            <DreamTrips />
 
             <HiddenLoveNotes />
 

@@ -79,7 +79,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
 }
@@ -300,7 +300,7 @@ section {
 
 @media (max-width: 768px) {
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     -webkit-overflow-scrolling: touch;
   }
   

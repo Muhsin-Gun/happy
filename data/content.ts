@@ -20,9 +20,9 @@ export const birthdayConfig = {
   quizQuestions: [
     {
       question: "Who's the most beautiful girl in the world?",
-      options: ["A. Some celebrity", "B. A random model", "C. That girl from TikTok", "D. YOU"],
-      correctAnswer: 3,
-      realAnswer: "Obviously it's you. Did you really think I'd pick anyone else?"
+      options: ["A. YOU 💕", "B. YOU 💕", "C. YOU 💕", "D. YOU 💕"],
+      correctAnswer: -1,
+      realAnswer: "Obviously it's you. Did you really think there was any other answer? 😏"
     },
     {
       question: "Who do I think about 24/7?",
@@ -31,10 +31,10 @@ export const birthdayConfig = {
       realAnswer: "You're literally always on my mind. It's actually embarrassing how much."
     },
     {
-      question: "Who stole my heart and never gave it back?",
-      options: ["A. My ex (I don't have one lol)", "B. Some fictional character", "C. Nobody", "D. YOU"],
-      correctAnswer: 3,
-      realAnswer: "You took it and honestly... keep it. It's yours anyway."
+      question: "Which one will you pick?",
+      options: ["A. Muhsin", "B. Pizza"],
+      correctAnswer: 0,
+      realAnswer: ""
     },
     {
       question: "Who's the reason I smile randomly throughout the day?",

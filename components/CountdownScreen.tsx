@@ -242,7 +242,7 @@ export default function CountdownScreen({ targetDate, onComplete, onPadlockClick
               whileHover={{ opacity: 1 }}
               initial={{ opacity: 0.4 }}
             >
-              (Psst... try clicking the padlock)
+              {/* (Psst... try clicking the padlock) */}
             </motion.p>
           </motion.div>
         ) : (

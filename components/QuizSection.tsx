@@ -35,12 +35,43 @@ export default function QuizSection({ questions, onComplete }: QuizSectionProps)
   const [showX, setShowX] = useState(false);
   const [reveal, setReveal] = useState<Record<string, boolean>>({});
   const [lastWrongId, setLastWrongId] = useState<string | null>(null);
+  const [customRevealText, setCustomRevealText] = useState<Record<string, string>>({});
 
   const q = QUESTIONS[current];
+  const displayRevealText = customRevealText[q.id] || q.revealText;
 
   function handleOptionChoose(idx: number) {
     const id = q.id;
     if (reveal[id]) return; // already revealed
+
+    // Question 1: All answers are correct
+    if (q.correctIndex === -1) {
+      setReveal((r) => ({ ...r, [id]: true }));
+      setShowX(false);
+      setTimeout(() => {
+        if (current < QUESTIONS.length - 1) {
+          setCurrent((c) => c + 1);
+        }
+      }, 1200);
+      return;
+    }
+
+    // Question 3: Special handling for Muhsin vs Pizza
+    if (current === 2) {
+      const customReveal = idx === 0 
+        ? "Good girl! 😊 You know what's important" 
+        : "We gonna fight right now naughty girl!! 😤";
+      
+      setCustomRevealText((prev) => ({ ...prev, [id]: customReveal }));
+      setReveal((r) => ({ ...r, [id]: true }));
+      setShowX(false);
+      setTimeout(() => {
+        if (current < QUESTIONS.length - 1) {
+          setCurrent((c) => c + 1);
+        }
+      }, 1200);
+      return;
+    }
 
     if (idx === q.correctIndex) {
       // correct
@@ -131,7 +162,7 @@ export default function QuizSection({ questions, onComplete }: QuizSectionProps)
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
           >
-            <p className="reveal-text">{q.revealText ?? "The real answer is… everything about you."}</p>
+            <p className="reveal-text">{displayRevealText ?? "The real answer is… everything about you."}</p>
             <div className="reveal-cta">
               {current < QUESTIONS.length - 1 ? (
                 <button className="next-btn" onClick={() => { setCurrent((c) => c + 1); }}>
