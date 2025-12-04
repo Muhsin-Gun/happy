@@ -9,6 +9,7 @@ interface Heart {
   delay: number
   duration: number
   size: number
+  emoji: string
 }
 
 export default function FloatingHearts() {
@@ -17,12 +18,14 @@ export default function FloatingHearts() {
 
   useEffect(() => {
     setMounted(true)
-    const newHearts = Array.from({ length: 25 }).map((_, i) => ({
+    const emojis = ['❤️', '💕', '💗', '💖', '💝', '🌸', '✨']
+    const newHearts = Array.from({ length: 20 }).map((_, i) => ({
       id: i,
       left: Math.random() * 100,
       delay: Math.random() * 10,
       duration: Math.random() * 10 + 15,
-      size: Math.random() * 20 + 15
+      size: Math.random() * 15 + 12,
+      emoji: emojis[i % emojis.length]
     }))
     setHearts(newHearts)
   }, [])
@@ -33,7 +36,7 @@ export default function FloatingHearts() {
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-10">
       {hearts.map((heart) => (
         <motion.div
-          key={heart.id}
+          key={`floating-heart-${heart.id}`}
           className="absolute text-pink-400"
           style={{
             left: `${heart.left}%`,
@@ -42,9 +45,9 @@ export default function FloatingHearts() {
           }}
           animate={{
             y: [0, -1200],
-            x: [0, Math.sin(heart.id) * 50, 0],
+            x: [0, Math.sin(heart.id) * 30, 0],
             rotate: [0, 360],
-            opacity: [0, 1, 1, 0]
+            opacity: [0, 0.8, 0.8, 0]
           }}
           transition={{
             duration: heart.duration,
@@ -53,7 +56,7 @@ export default function FloatingHearts() {
             ease: 'linear'
           }}
         >
-          {['❤️', '💕', '💗', '💖', '💝', '🌸', '✨'][heart.id % 7]}
+          {heart.emoji}
         </motion.div>
       ))}
     </div>

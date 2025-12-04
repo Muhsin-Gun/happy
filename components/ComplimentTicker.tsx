@@ -5,36 +5,43 @@ import { motion, AnimatePresence, useInView } from 'framer-motion'
 
 const compliments = [
   "You're absolutely stunning ✨",
-  "Your smile lights up my world 🌟",
+  "Your smile does things to me 🌟",
   "You make everything better 💕",
   "You're my favorite person 💗",
-  "You're incredibly beautiful 🌸",
-  "Your laugh is music to my ears 🎵",
-  "You're sweeter than honey 🍯",
-  "You're my sunshine ☀️",
-  "You're perfect to me 💝",
-  "You make my heart flutter 🦋",
-  "You're my dream come true 🌙",
-  "You're absolutely amazing 💫",
-  "You're my everything 💖",
+  "You're so beautiful it hurts 🌸",
+  "Your laugh is my favorite sound 🎵",
+  "You're sweeter than you know 🍯",
+  "You're my sunshine on bad days ☀️",
+  "You're perfect for me 💝",
+  "You make my heart race 🦋",
+  "You're literally a dream 🌙",
+  "You're absolutely incredible 💫",
+  "You're my whole world 💖",
   "You take my breath away 😍",
-  "You're one in a million 🏆"
+  "You're one in 8 billion 🏆"
 ]
 
 export default function ComplimentTicker() {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [mounted, setMounted] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true })
 
   useEffect(() => {
-    if (!isInView) return
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isInView || !mounted) return
     
     const interval = setInterval(() => {
       setCurrentIndex(prev => (prev + 1) % compliments.length)
     }, 3000)
 
     return () => clearInterval(interval)
-  }, [isInView])
+  }, [isInView, mounted])
+
+  if (!mounted) return null
 
   return (
     <section ref={ref} className="py-16 px-4 relative overflow-hidden">
@@ -47,13 +54,13 @@ export default function ComplimentTicker() {
           animate={isInView ? { opacity: 1 } : {}}
         >
           <h3 className="text-white font-dancing text-xl mb-4 opacity-80">
-            Did you know...
+            Just so you know...
           </h3>
           
           <div className="h-20 flex items-center justify-center overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.p
-                key={currentIndex}
+                key={`compliment-${currentIndex}`}
                 className="font-great text-3xl md:text-5xl text-white drop-shadow-lg"
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -68,7 +75,7 @@ export default function ComplimentTicker() {
           <div className="flex justify-center gap-2 mt-6">
             {compliments.map((_, index) => (
               <motion.div
-                key={index}
+                key={`dot-${index}`}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   index === currentIndex ? 'bg-white scale-125' : 'bg-white/40'
                 }`}

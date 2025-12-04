@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
 
 const jokes = [
@@ -14,8 +14,13 @@ const jokes = [
 
 export default function InsideJokes() {
   const [flippedCards, setFlippedCards] = useState<number[]>([])
+  const [mounted, setMounted] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true })
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const toggleFlip = (index: number) => {
     if (flippedCards.includes(index)) {
@@ -24,6 +29,8 @@ export default function InsideJokes() {
       setFlippedCards(prev => [...prev, index])
     }
   }
+
+  if (!mounted) return null
 
   return (
     <section ref={ref} className="py-20 px-4 relative overflow-hidden">
@@ -46,15 +53,16 @@ export default function InsideJokes() {
             Our Inside Jokes
           </h2>
           <p className="text-pink-600 font-dancing text-xl">
-            Click the cards to reveal our secrets!
+            Tap the cards to reveal our secrets!
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {jokes.map((joke, index) => (
             <motion.div
-              key={index}
-              className="perspective-1000 h-40 cursor-pointer"
+              key={`joke-card-${index}`}
+              className="h-40 cursor-pointer"
+              style={{ perspective: '1000px' }}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: index * 0.1 }}

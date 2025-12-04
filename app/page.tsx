@@ -29,8 +29,10 @@ export default function Home() {
   const [pageState, setPageState] = useState<PageState>('countdown')
   const [showCurtain, setShowCurtain] = useState(true)
   const [quizComplete, setQuizComplete] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const unlocked = localStorage.getItem('birthday_unlocked')
     if (unlocked === 'true') {
       setPageState('landing')
@@ -49,10 +51,21 @@ export default function Home() {
     }, 1500)
   }
 
-  const skipToMain = () => {
-    localStorage.setItem('birthday_unlocked', 'true')
-    setShowCurtain(false)
-    setPageState('main')
+  if (!mounted) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-lavender-blush to-soft-pink">
+        <div className="text-center">
+          <motion.div 
+            className="text-6xl mb-4"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 1, repeat: Infinity }}
+          >
+            💕
+          </motion.div>
+          <p className="font-dancing text-2xl text-pink-600">Loading your surprise...</p>
+        </div>
+      </main>
+    )
   }
 
   return (
@@ -113,10 +126,10 @@ export default function Home() {
                   🎉
                 </motion.div>
                 <h1 className="font-great text-5xl md:text-8xl gradient-text mb-6">
-                  Welcome to Your Day!
+                  Welcome, Baby!
                 </h1>
                 <p className="font-dancing text-2xl md:text-4xl text-pink-600 mb-8">
-                  Scroll down to explore your surprises...
+                  Scroll down to see what I made for you...
                 </p>
                 <motion.div
                   className="text-4xl"
@@ -154,7 +167,7 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                 >
-                  Let's Play a Game!
+                  Time For a Little Game
                 </motion.h2>
                 <motion.p
                   className="font-dancing text-xl text-pink-600"
@@ -163,7 +176,7 @@ export default function Home() {
                   viewport={{ once: true }}
                   transition={{ delay: 0.3 }}
                 >
-                  Answer some fun questions about us... but be careful! 😏
+                  Try to answer these... but there's a catch 😏
                 </motion.p>
               </div>
             </section>
@@ -187,10 +200,10 @@ export default function Home() {
                   🏆
                 </motion.div>
                 <h3 className="font-great text-4xl gradient-text">
-                  You completed the quiz!
+                  Quiz Complete!
                 </h3>
                 <p className="font-dancing text-xl text-pink-600 mt-4">
-                  But every answer is always YOU ❤️
+                  See? It was always you ❤️
                 </p>
               </motion.div>
             )}
@@ -202,7 +215,7 @@ export default function Home() {
             <ReasonsSection reasons={birthdayConfig.reasonsILoveYou} />
 
             <MessageBottle 
-              message="My dearest love, every moment with you is a treasure. You are my sunshine, my happiness, and my forever. Thank you for being you. I love you more than words can say. 💕"
+              message="Hey baby... I just wanted to say that meeting you was the best thing that ever happened to me. Every day with you feels like a gift. You're not just my girlfriend, you're my best friend, my favorite person, my everything. I love you more than I can ever put into words. 💕"
             />
 
             <PromiseJar />
@@ -234,9 +247,10 @@ export default function Home() {
                     My Promise To You
                   </h3>
                   <p className="font-dancing text-xl md:text-2xl text-pink-700 leading-relaxed">
-                    I promise to love you every single day, to make you laugh, to hold your hand, 
-                    to be your shoulder to lean on, and to cherish every moment we share together. 
-                    You are my present and my future. I'm yours, completely and forever.
+                    I promise to love you every single day. To make you laugh when you're sad, 
+                    to hold you when you need it, to be your biggest fan, and to never let you 
+                    forget how amazing you are. You're stuck with me now... and I wouldn't have it 
+                    any other way.
                   </p>
                   <motion.div
                     className="mt-6 text-4xl"
@@ -268,7 +282,7 @@ export default function Home() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
               >
-                Happy Birthday, {birthdayConfig.herName}! 🎂
+                Happy 18th Birthday, {birthdayConfig.herName}! 🎂
               </motion.p>
               <motion.div
                 className="mt-6 text-4xl"
@@ -288,33 +302,20 @@ export default function Home() {
       {pageState === 'countdown' && (
         <motion.button
           className="fixed bottom-5 left-5 z-[60] bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-lg text-sm"
-          onClick={skipToMain}
+          onClick={() => {
+            localStorage.setItem('birthday_unlocked', 'true')
+            setShowCurtain(false)
+            setPageState('main')
+          }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.6 }}
-          title="Skip countdown (for testing)"
+          animate={{ opacity: 0.5 }}
+          title="Skip countdown"
         >
-          Skip to Preview ⏭️
+          Preview ⏭️
         </motion.button>
       )}
-
-      <motion.button
-        className="fixed bottom-20 right-5 z-50 bg-pink-500 text-white p-3 rounded-full shadow-lg"
-        onClick={() => {
-          localStorage.removeItem('birthday_unlocked')
-          setPageState('countdown')
-          setShowCurtain(true)
-          setQuizComplete(false)
-        }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.7 }}
-        title="Reset (for testing)"
-      >
-        🔄
-      </motion.button>
     </main>
   )
 }

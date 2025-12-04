@@ -42,7 +42,7 @@ export default function CurtainReveal({ isOpen, onComplete }: CurtainRevealProps
         <div className="absolute inset-0 overflow-hidden">
           {Array.from({ length: 20 }).map((_, i) => (
             <div
-              key={i}
+              key={`left-stripe-${i}`}
               className="absolute w-full h-1 bg-gradient-to-r from-pink-400/30 to-transparent"
               style={{ top: `${i * 5}%` }}
             />
@@ -62,7 +62,7 @@ export default function CurtainReveal({ isOpen, onComplete }: CurtainRevealProps
         <div className="absolute inset-0 overflow-hidden">
           {Array.from({ length: 20 }).map((_, i) => (
             <div
-              key={i}
+              key={`right-stripe-${i}`}
               className="absolute w-full h-1 bg-gradient-to-l from-pink-400/30 to-transparent"
               style={{ top: `${i * 5}%` }}
             />

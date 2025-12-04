@@ -1,27 +1,54 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
 
 interface ReasonsSectionProps {
   reasons: string[]
 }
 
+interface FloatingEmoji {
+  id: number
+  left: number
+  top: number
+  emoji: string
+  duration: number
+  delay: number
+}
+
 export default function ReasonsSection({ reasons }: ReasonsSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [floatingEmojis, setFloatingEmojis] = useState<FloatingEmoji[]>([])
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    const emojis = ['💕', '✨', '💗', '🌸', '💝']
+    const generated = Array.from({ length: 20 }).map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      emoji: emojis[i % 5],
+      duration: 5 + Math.random() * 5,
+      delay: Math.random() * 2
+    }))
+    setFloatingEmojis(generated)
+  }, [])
+
+  if (!mounted) return null
 
   return (
     <section ref={containerRef} className="min-h-screen py-20 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-lavender-blush via-white to-soft-pink" />
       
       <div className="absolute inset-0">
-        {Array.from({ length: 20 }).map((_, i) => (
+        {floatingEmojis.map((item) => (
           <motion.div
-            key={i}
+            key={`floating-emoji-${item.id}`}
             className="absolute text-2xl"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`
+              left: `${item.left}%`,
+              top: `${item.top}%`
             }}
             animate={{
               opacity: [0.2, 0.5, 0.2],
@@ -29,12 +56,12 @@ export default function ReasonsSection({ reasons }: ReasonsSectionProps) {
               rotate: [0, 360]
             }}
             transition={{
-              duration: 5 + Math.random() * 5,
+              duration: item.duration,
               repeat: Infinity,
-              delay: Math.random() * 2
+              delay: item.delay
             }}
           >
-            {['💕', '✨', '💗', '🌸', '💝'][i % 5]}
+            {item.emoji}
           </motion.div>
         ))}
       </div>
@@ -67,7 +94,7 @@ export default function ReasonsSection({ reasons }: ReasonsSectionProps) {
 
         <div className="space-y-6">
           {reasons.map((reason, index) => (
-            <ReasonCard key={index} reason={reason} index={index} />
+            <ReasonCard key={`reason-${index}`} reason={reason} index={index} />
           ))}
         </div>
 
@@ -90,6 +117,7 @@ export default function ReasonsSection({ reasons }: ReasonsSectionProps) {
 function ReasonCard({ reason, index }: { reason: string; index: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-50px' })
+  const emojis = ['❤️', '💕', '💗', '💖', '💝', '🌸', '✨', '🦋', '🌹', '💫']
 
   return (
     <motion.div
@@ -117,7 +145,7 @@ function ReasonCard({ reason, index }: { reason: string; index: number }) {
         animate={{ scale: [1, 1.2, 1] }}
         transition={{ duration: 1.5, repeat: Infinity, delay: index * 0.2 }}
       >
-        {['❤️', '💕', '💗', '💖', '💝', '🌸', '✨', '🦋', '🌹', '💫'][index % 10]}
+        {emojis[index % 10]}
       </motion.span>
     </motion.div>
   )

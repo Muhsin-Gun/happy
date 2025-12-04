@@ -15,10 +15,27 @@ export default function LandingSection({ name, message, subtitle, onEnter }: Lan
   const containerRef = useRef<HTMLDivElement>(null)
   const lettersRef = useRef<HTMLSpanElement[]>([])
   const [showButton, setShowButton] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [bubbles, setBubbles] = useState<Array<{id: number, left: number, top: number, width: number, height: number, opacity: number}>>([])
 
   const fullMessage = `${message} ${name}`
 
   useEffect(() => {
+    setMounted(true)
+    const newBubbles = Array.from({ length: 30 }).map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      width: Math.random() * 100 + 50,
+      height: Math.random() * 100 + 50,
+      opacity: Math.random() * 0.2
+    }))
+    setBubbles(newBubbles)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+    
     const tl = gsap.timeline()
 
     lettersRef.current.forEach((letter, index) => {
@@ -44,7 +61,9 @@ export default function LandingSection({ name, message, subtitle, onEnter }: Lan
     })
 
     tl.call(() => setShowButton(true), [], '+=0.5')
-  }, [])
+  }, [mounted])
+
+  if (!mounted) return null
 
   return (
     <section 
@@ -59,27 +78,27 @@ export default function LandingSection({ name, message, subtitle, onEnter }: Lan
         animate={{ opacity: 1 }}
         transition={{ duration: 2 }}
       >
-        {Array.from({ length: 30 }).map((_, i) => (
+        {bubbles.map((bubble) => (
           <motion.div
-            key={i}
+            key={`bubble-${bubble.id}`}
             className="absolute rounded-full"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${Math.random() * 100 + 50}px`,
-              height: `${Math.random() * 100 + 50}px`,
-              background: `radial-gradient(circle, rgba(255, 105, 180, ${Math.random() * 0.2}) 0%, transparent 70%)`
+              left: `${bubble.left}%`,
+              top: `${bubble.top}%`,
+              width: `${bubble.width}px`,
+              height: `${bubble.height}px`,
+              background: `radial-gradient(circle, rgba(255, 105, 180, ${bubble.opacity}) 0%, transparent 70%)`
             }}
             animate={{
               scale: [1, 1.2, 1],
               opacity: [0.3, 0.6, 0.3],
-              x: [0, Math.random() * 50 - 25, 0],
-              y: [0, Math.random() * 50 - 25, 0]
+              x: [0, (bubble.id % 2 === 0 ? 25 : -25), 0],
+              y: [0, (bubble.id % 2 === 0 ? -25 : 25), 0]
             }}
             transition={{
-              duration: 5 + Math.random() * 5,
+              duration: 5 + (bubble.id % 5),
               repeat: Infinity,
-              delay: Math.random() * 2
+              delay: bubble.id * 0.1
             }}
           />
         ))}
@@ -109,7 +128,7 @@ export default function LandingSection({ name, message, subtitle, onEnter }: Lan
         <h1 className="font-great text-4xl sm:text-6xl md:text-8xl mb-6 overflow-visible">
           {fullMessage.split('').map((char, index) => (
             <span
-              key={index}
+              key={`letter-${index}-${char}`}
               ref={el => { if (el) lettersRef.current[index] = el }}
               className={`inline-block ${char === ' ' ? 'mx-2' : ''}`}
               style={{
@@ -153,7 +172,7 @@ export default function LandingSection({ name, message, subtitle, onEnter }: Lan
               >
                 ❤️
               </motion.span>
-              Enter Your Surprise
+              Open Your Surprise
               <motion.span
                 animate={{ scale: [1, 1.3, 1] }}
                 transition={{ duration: 1, repeat: Infinity, delay: 0.5 }}
@@ -170,7 +189,7 @@ export default function LandingSection({ name, message, subtitle, onEnter }: Lan
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
-        <span className="text-pink-400 text-sm">Scroll down for magic ✨</span>
+        <span className="text-pink-400 text-sm font-dancing">Scroll down for more magic ✨</span>
       </motion.div>
     </section>
   )

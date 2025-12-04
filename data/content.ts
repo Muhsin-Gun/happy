@@ -1,84 +1,84 @@
 export const birthdayConfig = {
   herName: "Sabriin",
-  yourName: "Your Love",
+  yourName: "Your Man",
   birthdayDate: "2025-12-15T00:00:00",
   
-  welcomeMessage: "Happy Birthday, My Baby",
-  subtitle: "A special journey just for you...",
+  welcomeMessage: "Happy 18th Birthday, My Love",
+  subtitle: "I made this just for you... scroll down and see what's waiting",
   
-  storyTitle: "Our Beautiful Story",
+  storyTitle: "Us",
   storyParagraphs: [
-    "From the moment I first saw your pretty face, I knew my life was about to change forever...",
-    "I was so shy around you at first. Every time I came over to your place, my heart would race just knowing I'd see you...",
-    "The way you looked at me, the warmth of your smile - you made every single day brighter than the last...",
-    "And then came that magical moment... when I became your first kiss. I'll treasure that memory forever...",
-    "You made my entire year so wholesome and beautiful. You showed me what real love feels like...",
-    "Your personality, your laugh, the way you love me with all your heart - you're absolutely perfect to me...",
-    "Every moment with you feels like a dream I never want to wake up from..."
+    "You know what? The first time I saw you, my heart literally stopped. I'm not even exaggerating. You were just... different.",
+    "I was so nervous around you at first, acting all cool when inside I was a complete mess every time I came over. Just hoping you'd notice me.",
+    "Then you did. And honestly? That changed everything for me.",
+    "Being your first kiss? That's something I'll carry with me forever. No joke.",
+    "You made my whole year feel like something out of a movie. The good kind, not the boring ones.",
+    "Your laugh, the way you tease me, how you look at me like I actually matter... you're perfect. Not in a fake way, just... you.",
+    "Every moment with you feels right. Like this is exactly where I'm supposed to be."
   ],
   
   quizQuestions: [
     {
-      question: "What do I like about you most?",
-      options: ["A. Your lips 💋", "B. Your thighs", "C. Your neck", "D. Your hands"],
-      correctAnswer: -1,
-      realAnswer: "Wrong! The correct answer is... EVERYTHING about you ❤️"
+      question: "Who's the most beautiful girl in the world?",
+      options: ["A. Some celebrity", "B. A random model", "C. That girl from TikTok", "D. YOU 💕"],
+      correctAnswer: 3,
+      realAnswer: "Obviously it's you. Did you really think I'd pick anyone else? 😏"
     },
     {
-      question: "What's my favorite thing to do with you?",
-      options: ["A. Watch movies", "B. Go on dates", "C. Just talk for hours", "D. Hold your hand"],
-      correctAnswer: -1,
-      realAnswer: "Trick question! I love doing ALL of these with you 💕"
+      question: "Who do I think about 24/7?",
+      options: ["A. Food", "B. Sleep", "C. Games", "D. YOU 💭"],
+      correctAnswer: 3,
+      realAnswer: "You're literally always on my mind. It's actually embarrassing how much."
     },
     {
-      question: "When did I know you were the one?",
-      options: ["A. First date", "B. First kiss", "C. When you laughed", "D. When we talked all night"],
-      correctAnswer: -1,
-      realAnswer: "From the very first moment I saw you... I just knew 💗"
+      question: "Who stole my heart and never gave it back?",
+      options: ["A. My ex (I don't have one lol)", "B. Some fictional character", "C. Nobody", "D. YOU 💘"],
+      correctAnswer: 3,
+      realAnswer: "You took it and honestly... keep it. It's yours anyway."
     },
     {
-      question: "What makes you the most beautiful?",
-      options: ["A. Your smile", "B. Your eyes", "C. Your personality", "D. Your style"],
-      correctAnswer: -1,
-      realAnswer: "Everything combined! You're a complete masterpiece 🎨❤️"
+      question: "Who's the reason I smile randomly throughout the day?",
+      options: ["A. Funny memes", "B. My friends", "C. Random thoughts", "D. YOU 😊"],
+      correctAnswer: 3,
+      realAnswer: "My friends think I'm going crazy smiling at my phone. It's always because of you."
     },
     {
-      question: "How much do I love you?",
-      options: ["A. A lot", "B. So much", "C. More than words", "D. To infinity"],
-      correctAnswer: -1,
-      realAnswer: "More than any answer could ever express... beyond infinity ♾️❤️"
+      question: "Who am I completely, absolutely, ridiculously in love with?",
+      options: ["A. Pizza (close second)", "B. My bed", "C. Music", "D. YOU ❤️"],
+      correctAnswer: 3,
+      realAnswer: "It's you. Always has been, always will be. No competition."
     }
   ],
   
   reasonsILoveYou: [
-    "Your smile lights up my entire world",
-    "The way you laugh makes my heart melt",
-    "Your kindness knows no bounds",
-    "You make me want to be a better person",
-    "Your hugs feel like home",
-    "The way you look at me like I'm your everything",
-    "Your strength and determination inspire me",
-    "You always know how to make me smile",
-    "Your voice is my favorite sound",
-    "You love me with all your heart, and I feel it every day"
+    "Your smile literally makes my bad days good",
+    "The way you laugh at my dumb jokes even when they're not funny",
+    "How you make me feel like I can be myself around you",
+    "Your voice... I could listen to you talk forever",
+    "The way you care about people, including me",
+    "Your random texts that make my whole day",
+    "How you look when you're focused on something",
+    "The way you say my name",
+    "Your hugs. Seriously. Best feeling ever.",
+    "Everything about you. I can't even list it all."
   ],
   
   photoPlaceholders: [
-    { id: 1, caption: "Our first photo together ❤️", placeholder: "Add your photo" },
-    { id: 2, caption: "My favorite smile 😊", placeholder: "Add your photo" },
-    { id: 3, caption: "That perfect day 🌸", placeholder: "Add your photo" },
-    { id: 4, caption: "Adventures with you 🌟", placeholder: "Add your photo" },
-    { id: 5, caption: "My heart belongs to you 💕", placeholder: "Add your photo" },
-    { id: 6, caption: "Making memories 📸", placeholder: "Add your photo" }
+    { id: 1, caption: "Us ❤️", placeholder: "Add your photo" },
+    { id: 2, caption: "That smile tho 😊", placeholder: "Add your photo" },
+    { id: 3, caption: "Best day ever 🌸", placeholder: "Add your photo" },
+    { id: 4, caption: "My favorite view 🌟", placeholder: "Add your photo" },
+    { id: 5, caption: "You + Me 💕", placeholder: "Add your photo" },
+    { id: 6, caption: "More memories to come 📸", placeholder: "Add your photo" }
   ],
   
-  finalMessage: "Thank you for being you. Thank you for loving me. Thank you for making every day magical. You are my everything, Sabriin. Happy Birthday, my love. I'm yours, forever and always. ❤️",
+  finalMessage: "Sabriin... you're 18 now. Officially an adult (kinda scary, right?). But no matter how old you get, you'll always be my baby. Thank you for being you. Thank you for choosing me. Thank you for making every single day worth it. I love you more than you'll ever know. Happy Birthday, my love. You deserve the whole world and more. ❤️",
   
   loveCertificate: {
-    title: "Certificate of Eternal Love",
+    title: "Official Certificate of Love",
     awardedTo: "Sabriin",
-    for: "Being the most amazing, beautiful, and loving person in the entire universe",
-    signedBy: "Your Forever Lover"
+    for: "Being the most amazing, beautiful, and irreplaceable girl in my entire world",
+    signedBy: "Your Man, Forever"
   }
 }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
 
 interface FloatingBalloonsProps {
@@ -10,6 +10,11 @@ interface FloatingBalloonsProps {
 export default function FloatingBalloons({ name }: FloatingBalloonsProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true })
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const balloons = [
     { text: name, color: 'from-pink-400 to-pink-600', delay: 0 },
@@ -18,6 +23,8 @@ export default function FloatingBalloons({ name }: FloatingBalloonsProps) {
     { text: 'BIRTHDAY', color: 'from-rose-400 to-rose-600', delay: 0.6 },
     { text: '❤️', color: 'from-hot-pink to-rose', delay: 0.8 }
   ]
+
+  if (!mounted) return null
 
   return (
     <section ref={ref} className="py-20 px-4 relative overflow-hidden min-h-[60vh]">
@@ -37,7 +44,7 @@ export default function FloatingBalloons({ name }: FloatingBalloonsProps) {
         <div className="flex flex-wrap justify-center gap-8 md:gap-12">
           {balloons.map((balloon, index) => (
             <motion.div
-              key={index}
+              key={`balloon-${balloon.text}-${index}`}
               className="relative"
               initial={{ y: 200, opacity: 0 }}
               animate={isInView ? { y: 0, opacity: 1 } : {}}

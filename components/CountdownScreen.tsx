@@ -126,7 +126,7 @@ export default function CountdownScreen({ targetDate, onComplete }: CountdownScr
       <div ref={starsRef} className="absolute inset-0">
         {stars.map((star) => (
           <div
-            key={star.id}
+            key={`star-${star.id}`}
             className="absolute rounded-full bg-white"
             style={{
               left: `${star.left}%`,
@@ -193,15 +193,9 @@ export default function CountdownScreen({ targetDate, onComplete }: CountdownScr
                   transition={{ delay: index * 0.2 }}
                   whileHover={{ scale: 1.05 }}
                 >
-                  <motion.span
-                    className="text-4xl md:text-6xl font-bold text-white block"
-                    key={item.value}
-                    initial={{ scale: 1.2 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.3 }}
-                  >
+                  <span className="text-4xl md:text-6xl font-bold text-white block">
                     {String(item.value).padStart(2, '0')}
-                  </motion.span>
+                  </span>
                   <span className="text-pink-300 text-sm md:text-base">{item.label}</span>
                 </motion.div>
               ))}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import confetti from 'canvas-confetti'
 import LoveCertificate from './LoveCertificate'
@@ -17,22 +17,29 @@ interface FinaleSectionProps {
 
 export default function FinaleSection({ finalMessage, certificate }: FinaleSectionProps) {
   const [showSurprise, setShowSurprise] = useState(false)
+  const [showBirthdayMessage, setShowBirthdayMessage] = useState(false)
   const [showCertificate, setShowCertificate] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(sectionRef, { once: true })
 
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const triggerFireworks = () => {
-    const duration = 5 * 1000
+    const duration = 6000
     const animationEnd = Date.now() + duration
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 }
 
     const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min
 
-    const interval: NodeJS.Timeout = setInterval(() => {
+    const interval = setInterval(() => {
       const timeLeft = animationEnd - Date.now()
 
       if (timeLeft <= 0) {
-        return clearInterval(interval)
+        clearInterval(interval)
+        return
       }
 
       const particleCount = 100 * (timeLeft / duration)
@@ -41,19 +48,22 @@ export default function FinaleSection({ finalMessage, certificate }: FinaleSecti
         ...defaults,
         particleCount,
         origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-        colors: ['#FF69B4', '#FFD700', '#FF1493', '#FFC0CB', '#FF6B6B']
+        colors: ['#FF69B4', '#FFD700', '#FF1493', '#FFC0CB', '#FF6B6B', '#8B5CF6']
       })
       confetti({
         ...defaults,
         particleCount,
         origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-        colors: ['#FF69B4', '#FFD700', '#FF1493', '#FFC0CB', '#FF6B6B']
+        colors: ['#FF69B4', '#FFD700', '#FF1493', '#FFC0CB', '#FF6B6B', '#8B5CF6']
       })
-    }, 250)
+    }, 200)
 
     setShowSurprise(true)
-    setTimeout(() => setShowCertificate(true), 2000)
+    setTimeout(() => setShowBirthdayMessage(true), 1500)
+    setTimeout(() => setShowCertificate(true), 4000)
   }
+
+  if (!mounted) return null
 
   return (
     <section ref={sectionRef} className="min-h-screen py-20 px-4 relative overflow-hidden">
@@ -90,11 +100,11 @@ export default function FinaleSection({ finalMessage, certificate }: FinaleSecti
           </motion.div>
           
           <h2 className="font-great text-5xl md:text-7xl gradient-text mb-4">
-            The Final Surprise
+            One Last Thing...
           </h2>
           
           <p className="text-pink-600 font-dancing text-xl">
-            Are you ready for something special?
+            Ready for the grand finale?
           </p>
         </motion.div>
 
@@ -127,16 +137,16 @@ export default function FinaleSection({ finalMessage, certificate }: FinaleSecti
                   transition={{ duration: 2, repeat: Infinity }}
                 />
                 <span className="relative z-10">
-                  ✨ Click Here For Your Surprise ✨
+                  🎂 Tap For Your Birthday Surprise 🎂
                 </span>
               </motion.button>
 
               <motion.p
-                className="mt-8 text-pink-500 text-lg"
+                className="mt-8 text-pink-500 text-lg font-dancing"
                 animate={{ opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                Go ahead, click it! 💕
+                Go ahead, you know you want to... 💕
               </motion.p>
             </motion.div>
           ) : (
@@ -144,35 +154,103 @@ export default function FinaleSection({ finalMessage, certificate }: FinaleSecti
               key="surprise"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="space-y-12"
+              className="space-y-8"
             >
-              <motion.div
-                className="text-center mb-12"
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
+              {showBirthdayMessage && (
                 <motion.div
-                  className="text-8xl mb-6"
-                  animate={{ 
-                    scale: [1, 1.3, 1],
-                    rotate: [0, 360]
-                  }}
-                  transition={{ duration: 2, type: 'spring' }}
+                  className="text-center"
+                  initial={{ opacity: 0, scale: 0.5, y: 50 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ type: 'spring', duration: 1 }}
                 >
-                  🎉
+                  <motion.div
+                    className="text-8xl md:text-9xl mb-6"
+                    animate={{ 
+                      scale: [1, 1.3, 1],
+                      rotate: [0, 360]
+                    }}
+                    transition={{ duration: 2, type: 'spring' }}
+                  >
+                    🎉
+                  </motion.div>
+                  
+                  <motion.h3 
+                    className="font-great text-4xl md:text-7xl text-white drop-shadow-lg mb-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    HAPPY BIRTHDAY
+                  </motion.h3>
+                  
+                  <motion.h2
+                    className="font-great text-5xl md:text-8xl gradient-text mb-6"
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.6, type: 'spring' }}
+                  >
+                    MY LOVE SABRIIN!
+                  </motion.h2>
+                  
+                  <motion.div
+                    className="flex justify-center gap-4 text-6xl md:text-8xl mb-6"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.9 }}
+                  >
+                    <motion.span animate={{ y: [0, -20, 0] }} transition={{ duration: 0.5, delay: 1 }}>🎂</motion.span>
+                    <motion.span animate={{ y: [0, -20, 0] }} transition={{ duration: 0.5, delay: 1.1 }}>🎈</motion.span>
+                    <motion.span animate={{ y: [0, -20, 0] }} transition={{ duration: 0.5, delay: 1.2 }}>🎁</motion.span>
+                    <motion.span animate={{ y: [0, -20, 0] }} transition={{ duration: 0.5, delay: 1.3 }}>🥳</motion.span>
+                    <motion.span animate={{ y: [0, -20, 0] }} transition={{ duration: 0.5, delay: 1.4 }}>💖</motion.span>
+                  </motion.div>
+
+                  <motion.div
+                    className="glass-effect rounded-3xl p-6 md:p-8 max-w-2xl mx-auto mb-8"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.5 }}
+                  >
+                    <motion.h4
+                      className="font-great text-3xl md:text-5xl text-pink-600 mb-4"
+                      animate={{ scale: [1, 1.05, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      HAPPY 18! 🔥
+                    </motion.h4>
+                    <motion.p
+                      className="font-dancing text-xl md:text-2xl text-pink-700 mb-4"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 2 }}
+                    >
+                      You're officially an adult now...
+                    </motion.p>
+                    <motion.p
+                      className="font-dancing text-2xl md:text-3xl text-rose font-bold"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 2.5, type: 'spring' }}
+                    >
+                      But stay away from vodka! 🍸❌
+                    </motion.p>
+                    <motion.p
+                      className="font-dancing text-lg text-pink-500 mt-2"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 3 }}
+                    >
+                      (I mean it... I need you sober so you can remember how much I love you 😏)
+                    </motion.p>
+                  </motion.div>
                 </motion.div>
-                
-                <h3 className="font-great text-4xl md:text-6xl text-white drop-shadow-lg mb-8">
-                  Happy Birthday, My Love!
-                </h3>
-              </motion.div>
+              )}
 
               <motion.div
                 className="love-letter mx-auto max-w-2xl"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1 }}
+                transition={{ delay: 3.5 }}
               >
                 <p className="text-xl md:text-2xl text-pink-700 leading-relaxed text-center">
                   {finalMessage}
@@ -181,9 +259,9 @@ export default function FinaleSection({ finalMessage, certificate }: FinaleSecti
 
               {showCertificate && (
                 <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1 }}
+                  initial={{ opacity: 0, y: 50, rotateX: -30 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ duration: 1, type: 'spring' }}
                 >
                   <LoveCertificate
                     title={certificate.title}
@@ -198,14 +276,29 @@ export default function FinaleSection({ finalMessage, certificate }: FinaleSecti
                 className="text-center pt-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 3 }}
+                transition={{ delay: 5 }}
               >
                 <motion.p
-                  className="font-great text-3xl md:text-4xl text-white drop-shadow-lg"
-                  animate={{ scale: [1, 1.05, 1] }}
+                  className="font-great text-3xl md:text-5xl text-white drop-shadow-lg"
+                  animate={{ 
+                    scale: [1, 1.05, 1],
+                    textShadow: [
+                      '0 0 20px rgba(255, 105, 180, 0.5)',
+                      '0 0 40px rgba(255, 105, 180, 0.8)',
+                      '0 0 20px rgba(255, 105, 180, 0.5)'
+                    ]
+                  }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  I Love You Forever ❤️
+                  I Love You Forever & Always ❤️
+                </motion.p>
+                <motion.p
+                  className="font-dancing text-xl text-pink-300 mt-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 6 }}
+                >
+                  - Your Man
                 </motion.p>
               </motion.div>
             </motion.div>

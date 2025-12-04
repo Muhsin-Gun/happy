@@ -5,19 +5,14 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  allowedDevOrigins: [
-    'localhost',
-    '127.0.0.1',
-    '*.replit.dev',
-    '*.repl.co',
-    '*.janeway.replit.dev'
-  ],
+  allowedDevOrigins: ['*'],
   async headers() {
     return [
       {
         source: '/:path*',
         headers: [
           { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
         ],
       },
     ];

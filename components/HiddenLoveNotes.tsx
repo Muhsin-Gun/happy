@@ -1,24 +1,29 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 
 const loveNotes = [
-  "You make my heart skip a beat every single day 💕",
-  "Your laugh is my favorite sound in the world 🎵",
-  "Being with you feels like coming home 🏠",
+  "You make my heart skip a beat every day 💕",
+  "Your laugh is my favorite sound 🎵",
+  "Being with you feels like home 🏠",
   "You're my favorite person to do nothing with ✨",
   "I fall more in love with you every day 📈❤️",
   "You're the reason I believe in soulmates 👫",
-  "My heart chose you and it was the best decision 💗",
-  "You're my today and all of my tomorrows 🌅",
-  "Life with you is an adventure I never want to end 🎢"
+  "My heart chose you and it was perfect 💗",
+  "You're my today and all my tomorrows 🌅",
+  "Life with you is the best adventure 🎢"
 ]
 
 export default function HiddenLoveNotes() {
   const [revealedNotes, setRevealedNotes] = useState<number[]>([])
+  const [mounted, setMounted] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true })
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const toggleNote = (index: number) => {
     if (revealedNotes.includes(index)) {
@@ -27,6 +32,10 @@ export default function HiddenLoveNotes() {
       setRevealedNotes(prev => [...prev, index])
     }
   }
+
+  const emojis = ['❤️', '💕', '💗', '💖', '💝', '🌸', '✨', '🦋', '🌹']
+
+  if (!mounted) return null
 
   return (
     <section ref={ref} className="py-20 px-4 relative overflow-hidden">
@@ -49,14 +58,14 @@ export default function HiddenLoveNotes() {
             Hidden Love Notes
           </h2>
           <p className="text-pink-600 font-dancing text-xl">
-            Click the hearts to reveal secret messages!
+            Tap the hearts to reveal secret messages!
           </p>
         </motion.div>
 
         <div className="grid grid-cols-3 gap-4 md:gap-8">
           {loveNotes.map((note, index) => (
             <motion.div
-              key={index}
+              key={`love-note-${index}`}
               className="aspect-square relative cursor-pointer"
               initial={{ opacity: 0, scale: 0 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
@@ -66,7 +75,7 @@ export default function HiddenLoveNotes() {
               <AnimatePresence mode="wait">
                 {!revealedNotes.includes(index) ? (
                   <motion.div
-                    key="heart"
+                    key={`heart-${index}`}
                     className="w-full h-full flex items-center justify-center"
                     exit={{ scale: 0, rotate: 180 }}
                     whileHover={{ scale: 1.2 }}
@@ -80,12 +89,12 @@ export default function HiddenLoveNotes() {
                       }}
                       transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
                     >
-                      {['❤️', '💕', '💗', '💖', '💝', '🌸', '✨', '🦋', '🌹'][index % 9]}
+                      {emojis[index % 9]}
                     </motion.span>
                   </motion.div>
                 ) : (
                   <motion.div
-                    key="note"
+                    key={`revealed-${index}`}
                     className="w-full h-full glass-effect rounded-xl p-4 flex items-center justify-center"
                     initial={{ scale: 0, rotateY: 180 }}
                     animate={{ scale: 1, rotateY: 0 }}
@@ -103,7 +112,7 @@ export default function HiddenLoveNotes() {
         </div>
 
         <motion.p
-          className="text-center mt-8 text-pink-500 italic"
+          className="text-center mt-8 text-pink-500 italic font-dancing"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ delay: 1 }}
