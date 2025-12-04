@@ -86,8 +86,9 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            className="relative z-0"
           >
-            <CurtainReveal isOpen={!showCurtain} />
+            {showCurtain && <CurtainReveal isOpen={!showCurtain} />}
             <LandingSection 
               name={birthdayConfig.herName}
               message={birthdayConfig.welcomeMessage}
@@ -208,7 +209,7 @@ export default function Home() {
               </motion.div>
             )}
 
-            <PhotoGallery photos={birthdayConfig.photoPlaceholders} />
+            <PhotoGallery />
 
             <InsideJokes />
 

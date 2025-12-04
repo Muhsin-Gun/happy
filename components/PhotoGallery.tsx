@@ -3,18 +3,28 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-interface Photo {
+// Import the four images from attached_assets
+import img1 from '../attached_assets/image_1764846659057.png'
+import img2 from '../attached_assets/WhatsApp Image 2025-12-04 at 21.27.51.jpeg'
+import img3 from '../attached_assets/WhatsApp Image 2025-12-04 at 21.27.52.jpeg'
+import img4 from '../attached_assets/WhatsApp Image 2025-12-04 at 21.28.40.jpeg'
+
+type Photo = {
   id: number
   caption: string
-  placeholder: string
+  src: string
 }
 
-interface PhotoGalleryProps {
-  photos: Photo[]
-}
-
-export default function PhotoGallery({ photos }: PhotoGalleryProps) {
+export default function PhotoGallery() {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
+
+  // Use the four provided images and remove other placeholders
+  const photos: Photo[] = [
+    { id: 1, caption: 'Us ❤️', src: img1 as unknown as string },
+    { id: 2, caption: 'That smile 😊', src: img2 as unknown as string },
+    { id: 3, caption: 'Best day 🌸', src: img3 as unknown as string },
+    { id: 4, caption: 'More memories 📸', src: img4 as unknown as string },
+  ]
 
   return (
     <section className="min-h-screen py-20 px-4 relative overflow-hidden">
@@ -43,46 +53,33 @@ export default function PhotoGallery({ photos }: PhotoGalleryProps) {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
           {photos.map((photo, index) => (
             <motion.div
               key={photo.id}
-              className="polaroid cursor-pointer"
+              className="polaroid cursor-pointer overflow-hidden"
               style={{ rotate: (index % 2 === 0 ? -3 : 3) + 'deg' }}
               initial={{ opacity: 0, y: 50, rotate: -10 }}
               whileInView={{ opacity: 1, y: 0, rotate: (index % 2 === 0 ? -3 : 3) }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.15, duration: 0.6 }}
-              whileHover={{ scale: 1.05, rotate: 0, zIndex: 10 }}
+              whileHover={{ scale: 1.03, rotate: 0, zIndex: 10 }}
               onClick={() => setSelectedPhoto(photo)}
             >
-              <div className="aspect-square bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center relative overflow-hidden group">
+              <div className="aspect-square bg-pink-50 flex items-center justify-center relative overflow-hidden group">
+                <img src={photo.src} alt={photo.caption} className="w-full h-full object-cover" />
+
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-br from-hot-pink/20 to-rose/20"
-                  animate={{
-                    opacity: [0.3, 0.6, 0.3]
-                  }}
-                  transition={{ duration: 3, repeat: Infinity }}
+                  animate={{ opacity: [0.2, 0.45, 0.2] }}
+                  transition={{ duration: 4, repeat: Infinity }}
                 />
-                
-                <div className="text-center p-4 z-10">
-                  <motion.div
-                    className="text-5xl mb-2"
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    🖼️
-                  </motion.div>
-                  <p className="text-pink-500 font-poppins text-sm">
-                    {photo.placeholder}
-                  </p>
-                </div>
 
                 <motion.div
                   className="absolute inset-0 border-4 border-gold/50 opacity-0 group-hover:opacity-100 transition-opacity"
                 />
               </div>
-              
+
               <p className="font-dancing text-xl text-center text-pink-700 mt-4">
                 {photo.caption}
               </p>
@@ -116,21 +113,10 @@ export default function PhotoGallery({ photos }: PhotoGalleryProps) {
               exit={{ scale: 0.5, opacity: 0 }}
               onClick={e => e.stopPropagation()}
             >
-              <div className="aspect-square bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center">
-                <div className="text-center p-8">
-                  <motion.div
-                    className="text-8xl mb-4"
-                    animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    💝
-                  </motion.div>
-                  <p className="text-pink-500 font-poppins">
-                    {selectedPhoto.placeholder}
-                  </p>
-                </div>
+              <div className="aspect-square bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center overflow-hidden">
+                <img src={selectedPhoto.src} alt={selectedPhoto.caption} className="w-full h-full object-cover" />
               </div>
-              
+
               <p className="font-dancing text-2xl text-center text-pink-700 mt-4">
                 {selectedPhoto.caption}
               </p>

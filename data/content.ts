@@ -67,9 +67,7 @@ export const birthdayConfig = {
     { id: 1, caption: "Us ❤️", placeholder: "Add your photo" },
     { id: 2, caption: "That smile tho 😊", placeholder: "Add your photo" },
     { id: 3, caption: "Best day ever 🌸", placeholder: "Add your photo" },
-    { id: 4, caption: "My favorite view 🌟", placeholder: "Add your photo" },
-    { id: 5, caption: "You + Me 💕", placeholder: "Add your photo" },
-    { id: 6, caption: "More memories to come 📸", placeholder: "Add your photo" }
+    { id: 4, caption: "More memories to come 📸", placeholder: "Add your photo" }
   ],
   
   finalMessage: "Sabriin... you're 18 now. Officially an adult (kinda scary, right?). But no matter how old you get, you'll always be my baby. Thank you for being you. Thank you for choosing me. Thank you for making every single day worth it. I love you more than you'll ever know. Happy Birthday, my love. You deserve the whole world and more. ❤️",
