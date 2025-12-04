@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useMemo } from 'react'
 import { motion, useInView } from 'framer-motion'
 
 interface ReasonsSectionProps {
@@ -18,13 +18,15 @@ interface FloatingEmoji {
 
 export default function ReasonsSection({ reasons }: ReasonsSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [floatingEmojis, setFloatingEmojis] = useState<FloatingEmoji[]>([])
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
+  }, [])
+
+  const floatingEmojis = useMemo(() => {
     const emojis = ['💕', '✨', '💗', '🌸', '💝']
-    const generated = Array.from({ length: 20 }).map((_, i) => ({
+    return Array.from({ length: 10 }).map((_, i) => ({
       id: i,
       left: Math.random() * 100,
       top: Math.random() * 100,
@@ -32,7 +34,6 @@ export default function ReasonsSection({ reasons }: ReasonsSectionProps) {
       duration: 5 + Math.random() * 5,
       delay: Math.random() * 2
     }))
-    setFloatingEmojis(generated)
   }, [])
 
   if (!mounted) return null
@@ -41,28 +42,20 @@ export default function ReasonsSection({ reasons }: ReasonsSectionProps) {
     <section ref={containerRef} className="min-h-screen py-20 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-lavender-blush via-white to-soft-pink" />
       
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 pointer-events-none">
         {floatingEmojis.map((item) => (
-          <motion.div
+          <div
             key={`floating-emoji-${item.id}`}
-            className="absolute text-2xl"
+            className="absolute text-2xl emoji-float"
             style={{
               left: `${item.left}%`,
-              top: `${item.top}%`
-            }}
-            animate={{
-              opacity: [0.2, 0.5, 0.2],
-              scale: [0.8, 1, 0.8],
-              rotate: [0, 360]
-            }}
-            transition={{
-              duration: item.duration,
-              repeat: Infinity,
-              delay: item.delay
+              top: `${item.top}%`,
+              animationDuration: `${item.duration}s`,
+              animationDelay: `${item.delay}s`
             }}
           >
             {item.emoji}
-          </motion.div>
+          </div>
         ))}
       </div>
 
@@ -106,10 +99,27 @@ export default function ReasonsSection({ reasons }: ReasonsSectionProps) {
           transition={{ delay: 0.5 }}
         >
           <p className="font-dancing text-2xl text-pink-600">
-            ...and a million more reasons I could never fit on this page 💕
+            ...and a million more reasons I could never fit on this page
           </p>
         </motion.div>
       </div>
+
+      <style jsx>{`
+        .emoji-float {
+          animation: emojiFloat linear infinite;
+          will-change: transform, opacity;
+        }
+        @keyframes emojiFloat {
+          0%, 100% {
+            opacity: 0.2;
+            transform: scale(0.8) rotate(0deg);
+          }
+          50% {
+            opacity: 0.5;
+            transform: scale(1) rotate(180deg);
+          }
+        }
+      `}</style>
     </section>
   )
 }
@@ -140,13 +150,9 @@ function ReasonCard({ reason, index }: { reason: string; index: number }) {
         {reason}
       </p>
       
-      <motion.span
-        className="text-2xl flex-shrink-0"
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 1.5, repeat: Infinity, delay: index * 0.2 }}
-      >
+      <span className="text-2xl flex-shrink-0">
         {emojis[index % 10]}
-      </motion.span>
+      </span>
     </motion.div>
   )
 }

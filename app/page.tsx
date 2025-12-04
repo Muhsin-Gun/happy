@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import CountdownScreen from '@/components/CountdownScreen'
 import CurtainReveal from '@/components/CurtainReveal'
@@ -28,6 +28,7 @@ type PageState = 'countdown' | 'landing' | 'main'
 export default function Home() {
   const [pageState, setPageState] = useState<PageState>('countdown')
   const [showCurtain, setShowCurtain] = useState(true)
+  const [curtainOpening, setCurtainOpening] = useState(false)
   const [quizComplete, setQuizComplete] = useState(false)
   const [mounted, setMounted] = useState(false)
 
@@ -36,20 +37,32 @@ export default function Home() {
     const unlocked = localStorage.getItem('birthday_unlocked')
     if (unlocked === 'true') {
       setPageState('landing')
+      setShowCurtain(false)
     }
   }, [])
 
-  const handleCountdownComplete = () => {
+  const handleCountdownComplete = useCallback(() => {
     localStorage.setItem('birthday_unlocked', 'true')
     setPageState('landing')
-  }
+  }, [])
 
-  const handleEnterSite = () => {
+  const handlePadlockClick = useCallback(() => {
+    localStorage.setItem('birthday_unlocked', 'true')
     setShowCurtain(false)
+    setPageState('landing')
+  }, [])
+
+  const handleEnterSite = useCallback(() => {
+    setCurtainOpening(true)
     setTimeout(() => {
+      setShowCurtain(false)
       setPageState('main')
-    }, 1500)
-  }
+    }, 1200)
+  }, [])
+
+  const handleCurtainComplete = useCallback(() => {
+    setShowCurtain(false)
+  }, [])
 
   if (!mounted) {
     return (
@@ -77,6 +90,7 @@ export default function Home() {
           <CountdownScreen 
             targetDate={birthdayConfig.birthdayDate}
             onComplete={handleCountdownComplete}
+            onPadlockClick={handlePadlockClick}
           />
         )}
 
@@ -88,7 +102,12 @@ export default function Home() {
             exit={{ opacity: 0 }}
             className="relative z-0"
           >
-            {showCurtain && <CurtainReveal isOpen={!showCurtain} />}
+            {showCurtain && (
+              <CurtainReveal 
+                isOpen={curtainOpening} 
+                onComplete={handleCurtainComplete}
+              />
+            )}
             <LandingSection 
               name={birthdayConfig.herName}
               message={birthdayConfig.welcomeMessage}
@@ -177,7 +196,7 @@ export default function Home() {
                   viewport={{ once: true }}
                   transition={{ delay: 0.3 }}
                 >
-                  Try to answer these... but there's a catch 😏
+                  Try to answer these... but there's a catch
                 </motion.p>
               </div>
             </section>
@@ -204,7 +223,7 @@ export default function Home() {
                   Quiz Complete!
                 </h3>
                 <p className="font-dancing text-xl text-pink-600 mt-4">
-                  See? It was always you ❤️
+                  See? It was always you
                 </p>
               </motion.div>
             )}
@@ -216,7 +235,7 @@ export default function Home() {
             <ReasonsSection reasons={birthdayConfig.reasonsILoveYou} />
 
             <MessageBottle 
-              message="Hey baby... I just wanted to say that meeting you was the best thing that ever happened to me. Every day with you feels like a gift. You're not just my girlfriend, you're my best friend, my favorite person, my everything. I love you more than I can ever put into words. 💕"
+              message="Hey baby... I just wanted to say that meeting you was the best thing that ever happened to me. Every day with you feels like a gift. You're not just my girlfriend, you're my best friend, my favorite person, my everything. I love you more than I can ever put into words."
             />
 
             <PromiseJar />
@@ -275,7 +294,7 @@ export default function Home() {
                 animate={{ opacity: [0.7, 1, 0.7] }}
                 transition={{ duration: 3, repeat: Infinity }}
               >
-                Made with all my love, just for you ❤️
+                Made with all my love, just for you
               </motion.p>
               <motion.p
                 className="font-dancing text-lg text-white/80 mt-4"
@@ -299,24 +318,6 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {pageState === 'countdown' && (
-        <motion.button
-          className="fixed bottom-5 left-5 z-[60] bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-lg text-sm"
-          onClick={() => {
-            localStorage.setItem('birthday_unlocked', 'true')
-            setShowCurtain(false)
-            setPageState('main')
-          }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.5 }}
-          title="Skip countdown"
-        >
-          Preview ⏭️
-        </motion.button>
-      )}
     </main>
   )
 }

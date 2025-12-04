@@ -1,7 +1,7 @@
 export const birthdayConfig = {
   herName: "Sabriin",
   yourName: "Your Man",
-  birthdayDate: "2025-12-15T00:00:00",
+  birthdayDate: "2025-12-05T07:00:00.000Z",
   
   welcomeMessage: "Happy 18th Birthday, My Love",
   subtitle: "I made this just for you... scroll down and see what's waiting",
@@ -20,31 +20,31 @@ export const birthdayConfig = {
   quizQuestions: [
     {
       question: "Who's the most beautiful girl in the world?",
-      options: ["A. Some celebrity", "B. A random model", "C. That girl from TikTok", "D. YOU 💕"],
+      options: ["A. Some celebrity", "B. A random model", "C. That girl from TikTok", "D. YOU"],
       correctAnswer: 3,
-      realAnswer: "Obviously it's you. Did you really think I'd pick anyone else? 😏"
+      realAnswer: "Obviously it's you. Did you really think I'd pick anyone else?"
     },
     {
       question: "Who do I think about 24/7?",
-      options: ["A. Food", "B. Sleep", "C. Games", "D. YOU 💭"],
+      options: ["A. Food", "B. Sleep", "C. Games", "D. YOU"],
       correctAnswer: 3,
       realAnswer: "You're literally always on my mind. It's actually embarrassing how much."
     },
     {
       question: "Who stole my heart and never gave it back?",
-      options: ["A. My ex (I don't have one lol)", "B. Some fictional character", "C. Nobody", "D. YOU 💘"],
+      options: ["A. My ex (I don't have one lol)", "B. Some fictional character", "C. Nobody", "D. YOU"],
       correctAnswer: 3,
       realAnswer: "You took it and honestly... keep it. It's yours anyway."
     },
     {
       question: "Who's the reason I smile randomly throughout the day?",
-      options: ["A. Funny memes", "B. My friends", "C. Random thoughts", "D. YOU 😊"],
+      options: ["A. Funny memes", "B. My friends", "C. Random thoughts", "D. YOU"],
       correctAnswer: 3,
       realAnswer: "My friends think I'm going crazy smiling at my phone. It's always because of you."
     },
     {
       question: "Who am I completely, absolutely, ridiculously in love with?",
-      options: ["A. Pizza (close second)", "B. My bed", "C. Music", "D. YOU ❤️"],
+      options: ["A. Pizza (close second)", "B. My bed", "C. Music", "D. YOU"],
       correctAnswer: 3,
       realAnswer: "It's you. Always has been, always will be. No competition."
     }
@@ -64,13 +64,13 @@ export const birthdayConfig = {
   ],
   
   photoPlaceholders: [
-    { id: 1, caption: "Us ❤️", placeholder: "Add your photo" },
-    { id: 2, caption: "That smile tho 😊", placeholder: "Add your photo" },
-    { id: 3, caption: "Best day ever 🌸", placeholder: "Add your photo" },
-    { id: 4, caption: "More memories to come 📸", placeholder: "Add your photo" }
+    { id: 1, caption: "Us", placeholder: "Add your photo" },
+    { id: 2, caption: "That smile tho", placeholder: "Add your photo" },
+    { id: 3, caption: "Best day ever", placeholder: "Add your photo" },
+    { id: 4, caption: "More memories to come", placeholder: "Add your photo" }
   ],
   
-  finalMessage: "Sabriin... you're 18 now. Officially an adult (kinda scary, right?). But no matter how old you get, you'll always be my baby. Thank you for being you. Thank you for choosing me. Thank you for making every single day worth it. I love you more than you'll ever know. Happy Birthday, my love. You deserve the whole world and more. ❤️",
+  finalMessage: "Sabriin... you're 18 now. Officially an adult (kinda scary, right?). But no matter how old you get, you'll always be my baby. Thank you for being you. Thank you for choosing me. Thank you for making every single day worth it. I love you more than you'll ever know. Happy Birthday, my love. You deserve the whole world and more.",
   
   loveCertificate: {
     title: "Official Certificate of Love",

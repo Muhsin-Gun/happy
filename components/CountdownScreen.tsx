@@ -7,6 +7,7 @@ import gsap from 'gsap'
 interface CountdownScreenProps {
   targetDate: string
   onComplete: () => void
+  onPadlockClick?: () => void
 }
 
 interface Star {
@@ -18,7 +19,7 @@ interface Star {
   duration: number
 }
 
-export default function CountdownScreen({ targetDate, onComplete }: CountdownScreenProps) {
+export default function CountdownScreen({ targetDate, onComplete, onPadlockClick }: CountdownScreenProps) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -99,6 +100,12 @@ export default function CountdownScreen({ targetDate, onComplete }: CountdownScr
     }
   }, [mounted, stars])
 
+  const handlePadlockClick = () => {
+    if (onPadlockClick) {
+      onPadlockClick()
+    }
+  }
+
   if (!mounted) {
     return (
       <div 
@@ -163,9 +170,13 @@ export default function CountdownScreen({ targetDate, onComplete }: CountdownScr
             transition={{ duration: 0.8 }}
           >
             <motion.div
-              className="text-6xl md:text-8xl mb-4"
+              className="text-6xl md:text-8xl mb-4 cursor-pointer select-none"
               animate={{ rotate: [0, 10, -10, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
+              onClick={handlePadlockClick}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              title="Click to unlock early"
             >
               🔒
             </motion.div>
@@ -206,7 +217,16 @@ export default function CountdownScreen({ targetDate, onComplete }: CountdownScr
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 3, repeat: Infinity }}
             >
-              ✨ Patience, my love... the best is yet to come ✨
+              Patience, my love... the best is yet to come
+            </motion.p>
+
+            <motion.p
+              className="mt-4 text-pink-400/60 text-sm font-light cursor-pointer"
+              onClick={handlePadlockClick}
+              whileHover={{ opacity: 1 }}
+              initial={{ opacity: 0.4 }}
+            >
+              (Psst... try clicking the padlock)
             </motion.p>
           </motion.div>
         ) : (
@@ -244,7 +264,7 @@ export default function CountdownScreen({ targetDate, onComplete }: CountdownScr
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
             >
-              Welcome to your special surprise... ❤️
+              Welcome to your special surprise...
             </motion.p>
           </motion.div>
         )}

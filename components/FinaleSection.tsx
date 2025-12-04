@@ -166,10 +166,10 @@ export default function FinaleSection({ finalMessage, certificate }: FinaleSecti
                   <motion.div
                     className="text-8xl md:text-9xl mb-6"
                     animate={{ 
-                      scale: [1, 1.3, 1],
+                      scale: [1, 1.3],
                       rotate: [0, 360]
                     }}
-                    transition={{ duration: 2, type: 'spring' }}
+                    transition={{ duration: 1.5 }}
                   >
                     🎉
                   </motion.div>
@@ -213,8 +213,8 @@ export default function FinaleSection({ finalMessage, certificate }: FinaleSecti
                   >
                     <motion.h4
                       className="font-great text-3xl md:text-5xl text-pink-600 mb-4"
-                      animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
+                      animate={{ scale: [1, 1.05] }}
+                      transition={{ duration: 1, repeat: Infinity, repeatType: 'reverse' }}
                     >
                       HAPPY 18! 🔥
                     </motion.h4>
