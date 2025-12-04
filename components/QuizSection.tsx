@@ -11,45 +11,25 @@ import { motion } from "framer-motion";
  */
 
 type Question = {
-  id: string;
   question: string;
   options: string[];
-  correctIndex: number;
-  revealText?: string; // custom reveal message
+  correctAnswer: number;
+  realAnswer: string;
 };
 
-const QUESTIONS: Question[] = [
-  {
-    id: "q1",
-    question: "What do I love about you?",
-    options: ["Your lips", "Your neck", "Your smile", "Everything about you"],
-    correctIndex: 3,
-    revealText: "Everything about you — every little thing.",
-  },
-  {
-    id: "q2",
-    question: "If I could plan the perfect quick getaway with you, which would I secretly pick?",
-    options: ["A cozy mountainside cabin", "A seaside sunrise with pancakes", "A spontaneous road trip with no plan", "A city museum hop and coffee crawl"],
-    correctIndex: 2,
-    revealText: "A spontaneous road trip — because any place is perfect with you.",
-  },
-  {
-    id: "q3",
-    question: "Which odd little habit of yours makes me melt the most?",
-    options: ["When you tuck hair behind your ear", "When you laugh at my worst jokes", "When you make that thinking face", "When you sing in the shower"],
-    correctIndex: 1,
-    revealText: "Your laugh at my worst jokes — it's my favourite sound.",
-  },
-  {
-    id: "q4",
-    question: "If I could gift you one silly superpower for our dates, what would I pick?",
-    options: ["Teleportation (skip traffic!)", "Unlimited coffee refills", "Perfect weather control", "A pause button for cozy moments"],
-    correctIndex: 3,
-    revealText: "A pause button — so our best moments never end.",
-  },
-];
+type QuizSectionProps = {
+  questions: Question[];
+  onComplete: () => void;
+};
 
-export default function QuizSection() {
+export default function QuizSection({ questions, onComplete }: QuizSectionProps) {
+  const QUESTIONS = questions.map((q, idx) => ({
+    id: `q${idx + 1}`,
+    question: q.question,
+    options: q.options,
+    correctIndex: q.correctAnswer,
+    revealText: q.realAnswer,
+  }));
   const [current, setCurrent] = useState(0);
   const [wrongAttempts, setWrongAttempts] = useState<Record<string, number>>({});
   const [showX, setShowX] = useState(false);
@@ -158,7 +138,7 @@ export default function QuizSection() {
                   Next question →
                 </button>
               ) : (
-                <button className="next-btn" onClick={() => { /* maybe open final surprise */ }}>
+                <button className="next-btn" onClick={onComplete}>
                   Finish ❤️
                 </button>
               )}
