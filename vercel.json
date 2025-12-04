@@ -5,6 +5,6 @@
   "framework": "nextjs",
   "outputDirectory": ".next",
   "public": false,
-  "env": [],
-  "envPrefix": "NEXT_PUBLIC_"
+  "env": []
+
 }
