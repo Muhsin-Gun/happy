@@ -1,277 +1,270 @@
-'use client'
+// components/QuizSection.tsx
+"use client";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import confetti from 'canvas-confetti'
+/**
+ * QuizSection
+ * - Has multiple questions (includes your example).
+ * - Wrong answers produce a dramatic X animation + shake.
+ * - After a few wrong attempts, reveal the "real" answer with a cute message.
+ */
 
-interface QuizQuestion {
-  question: string
-  options: string[]
-  correctAnswer: number
-  realAnswer: string
-}
+type Question = {
+  id: string;
+  question: string;
+  options: string[];
+  correctIndex: number;
+  revealText?: string; // custom reveal message
+};
 
-interface QuizSectionProps {
-  questions: QuizQuestion[]
-  onComplete: () => void
-}
+const QUESTIONS: Question[] = [
+  {
+    id: "q1",
+    question: "What do I love about you?",
+    options: ["Your lips", "Your neck", "Your smile", "Everything about you"],
+    correctIndex: 3,
+    revealText: "Everything about you — every little thing.",
+  },
+  {
+    id: "q2",
+    question: "If I could plan the perfect quick getaway with you, which would I secretly pick?",
+    options: ["A cozy mountainside cabin", "A seaside sunrise with pancakes", "A spontaneous road trip with no plan", "A city museum hop and coffee crawl"],
+    correctIndex: 2,
+    revealText: "A spontaneous road trip — because any place is perfect with you.",
+  },
+  {
+    id: "q3",
+    question: "Which odd little habit of yours makes me melt the most?",
+    options: ["When you tuck hair behind your ear", "When you laugh at my worst jokes", "When you make that thinking face", "When you sing in the shower"],
+    correctIndex: 1,
+    revealText: "Your laugh at my worst jokes — it's my favourite sound.",
+  },
+  {
+    id: "q4",
+    question: "If I could gift you one silly superpower for our dates, what would I pick?",
+    options: ["Teleportation (skip traffic!)", "Unlimited coffee refills", "Perfect weather control", "A pause button for cozy moments"],
+    correctIndex: 3,
+    revealText: "A pause button — so our best moments never end.",
+  },
+];
 
-export default function QuizSection({ questions, onComplete }: QuizSectionProps) {
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [wrongAttempts, setWrongAttempts] = useState<number[]>([])
-  const [showRealAnswer, setShowRealAnswer] = useState(false)
-  const [isShaking, setIsShaking] = useState(false)
-  const [allWrongTried, setAllWrongTried] = useState(false)
-  const [showFinalReveal, setShowFinalReveal] = useState(false)
-  const [mounted, setMounted] = useState(false)
+export default function QuizSection() {
+  const [current, setCurrent] = useState(0);
+  const [wrongAttempts, setWrongAttempts] = useState<Record<string, number>>({});
+  const [showX, setShowX] = useState(false);
+  const [reveal, setReveal] = useState<Record<string, boolean>>({});
+  const [lastWrongId, setLastWrongId] = useState<string | null>(null);
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const q = QUESTIONS[current];
 
-  const question = questions[currentQuestion]
-  const correctIndex = question.correctAnswer
+  function handleOptionChoose(idx: number) {
+    const id = q.id;
+    if (reveal[id]) return; // already revealed
 
-  const handleAnswer = (index: number) => {
-    if (wrongAttempts.includes(index)) return
-
-    if (index === correctIndex) {
-      confetti({
-        particleCount: 150,
-        spread: 100,
-        origin: { y: 0.6 },
-        colors: ['#FF69B4', '#FFD700', '#FF1493', '#FFC0CB', '#ff6b6b']
-      })
-      
-      setShowRealAnswer(true)
-      
+    if (idx === q.correctIndex) {
+      // correct
+      setReveal((r) => ({ ...r, [id]: true }));
+      setShowX(false);
+      // short delay then next question (if any)
       setTimeout(() => {
-        setShowRealAnswer(false)
-        setWrongAttempts([])
-        setAllWrongTried(false)
-        
-        if (currentQuestion < questions.length - 1) {
-          setCurrentQuestion(prev => prev + 1)
+        if (current < QUESTIONS.length - 1) {
+          setCurrent((c) => c + 1);
         } else {
-          setShowFinalReveal(true)
-          const duration = 4000
-          const animationEnd = Date.now() + duration
-          
-          const interval = setInterval(() => {
-            const timeLeft = animationEnd - Date.now()
-            if (timeLeft <= 0) {
-              clearInterval(interval)
-              setTimeout(onComplete, 1000)
-              return
-            }
-            
-            confetti({
-              particleCount: 50,
-              angle: 60,
-              spread: 55,
-              origin: { x: 0 },
-              colors: ['#FF69B4', '#FFD700', '#FF1493']
-            })
-            confetti({
-              particleCount: 50,
-              angle: 120,
-              spread: 55,
-              origin: { x: 1 },
-              colors: ['#FF69B4', '#FFD700', '#FF1493']
-            })
-          }, 250)
+          // finished - keep reveal on last
         }
-      }, 3500)
+      }, 1200);
     } else {
-      setIsShaking(true)
-      setWrongAttempts(prev => [...prev, index])
-      
-      setTimeout(() => setIsShaking(false), 500)
-      
-      const newWrongAttempts = [...wrongAttempts, index]
-      const allOthersTried = question.options.every((_, i) => 
-        i === correctIndex || newWrongAttempts.includes(i)
-      )
-      
-      if (allOthersTried) {
-        setAllWrongTried(true)
-      }
+      // wrong
+      setLastWrongId(id);
+      setShowX(true);
+      setWrongAttempts((prev) => {
+        const next = { ...prev, [id]: (prev[id] || 0) + 1 };
+        // if attempts reach 2 (or more), reveal correct answer with explanation
+        if ((next[id] || 0) >= 2) {
+          setTimeout(() => {
+            setReveal((r) => ({ ...r, [id]: true }));
+            setShowX(false);
+          }, 850);
+        } else {
+          // hide X after short time
+          setTimeout(() => setShowX(false), 850);
+        }
+        return next;
+      });
     }
   }
 
-  if (!mounted) return null
-
-  if (showFinalReveal) {
-    return (
-      <section className="min-h-screen py-20 px-4 flex items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-lavender-blush via-light-pink to-soft-pink" />
-        <motion.div
-          className="text-center z-10 max-w-2xl mx-auto"
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: 'spring', duration: 1 }}
-        >
-          <motion.div
-            className="text-9xl mb-8"
-            animate={{ 
-              scale: [1, 1.3, 1],
-              rotate: [0, 10, -10, 0]
-            }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            🏆
-          </motion.div>
-          <h2 className="font-great text-5xl md:text-7xl gradient-text mb-6">
-            You Won!
-          </h2>
-          <p className="font-dancing text-2xl md:text-3xl text-pink-600 mb-4">
-            But honestly... you already knew, didn't you?
-          </p>
-          <motion.p
-            className="font-dancing text-xl text-pink-500"
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            The answer was always you... and it always will be ❤️
-          </motion.p>
-        </motion.div>
-      </section>
-    )
-  }
-
   return (
-    <section className="min-h-screen py-20 px-4 flex items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-lavender-blush via-light-pink to-soft-pink opacity-50" />
-      
-      <motion.div
-        className={`max-w-2xl w-full z-10 ${isShaking ? 'animate-shake' : ''}`}
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <motion.div
-          className="text-center mb-8"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', delay: 0.3 }}
+    <section className="quiz-section" aria-live="polite">
+      <div className="quiz-card" data-question-id={q.id}>
+        <h2 className="quiz-title">Question {current + 1} of {QUESTIONS.length}</h2>
+
+        <motion.h3
+          key={q.id + "-q"}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="quiz-question"
         >
-          <span className="text-6xl">🎮</span>
-        </motion.div>
+          {q.question}
+        </motion.h3>
 
-        <h2 className="font-great text-4xl md:text-6xl text-center gradient-text mb-4">
-          Quick Quiz, Baby!
-        </h2>
-        
-        <p className="text-center text-pink-600 mb-8 font-dancing text-lg">
-          Question {currentQuestion + 1} of {questions.length}
-        </p>
-
-        <motion.div
-          className="glass-effect rounded-3xl p-6 md:p-12"
-          key={currentQuestion}
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -100 }}
-        >
-          <h3 className="font-dancing text-xl md:text-3xl text-center text-pink-700 mb-8">
-            {question.question}
-          </h3>
-
-          <AnimatePresence mode="wait">
-            {!showRealAnswer ? (
-              <motion.div
-                key="options"
-                className="space-y-3"
-                exit={{ opacity: 0 }}
+        <div className="options">
+          {q.options.map((opt, i) => {
+            const disabled = !!reveal[q.id];
+            return (
+              <motion.button
+                key={opt}
+                className="option-btn"
+                onClick={() => !disabled && handleOptionChoose(i)}
+                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.02 }}
+                aria-disabled={disabled}
               >
-                {question.options.map((option, index) => (
-                  <motion.button
-                    key={`${currentQuestion}-${index}`}
-                    className={`quiz-option w-full text-left ${
-                      wrongAttempts.includes(index) ? 'wrong-answer opacity-60' : ''
-                    } ${
-                      index === correctIndex && allWrongTried ? 'correct-answer animate-pulse' : ''
-                    }`}
-                    onClick={() => handleAnswer(index)}
-                    disabled={wrongAttempts.includes(index) || showRealAnswer}
-                    whileHover={!wrongAttempts.includes(index) ? { scale: 1.02 } : {}}
-                    whileTap={!wrongAttempts.includes(index) ? { scale: 0.98 } : {}}
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <span className="font-medium">{option}</span>
-                    {wrongAttempts.includes(index) && (
-                      <span className="ml-2">❌</span>
-                    )}
-                    {index === correctIndex && allWrongTried && (
-                      <motion.span 
-                        className="ml-2"
-                        animate={{ scale: [1, 1.3, 1] }}
-                        transition={{ duration: 0.5, repeat: Infinity }}
-                      >
-                        👈 Tap me!
-                      </motion.span>
-                    )}
-                  </motion.button>
-                ))}
-                
-                {allWrongTried && (
-                  <motion.p
-                    className="text-center text-pink-600 font-dancing text-lg mt-4"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    Hmm... maybe try the obvious one? 😏
-                  </motion.p>
-                )}
-              </motion.div>
-            ) : (
-              <motion.div
-                key="answer"
-                className="text-center py-8"
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: 'spring' }}
-              >
-                <motion.div
-                  className="text-7xl mb-6"
-                  animate={{ 
-                    rotate: [0, -10, 10, -10, 10, 0],
-                    scale: [1, 1.2, 1]
-                  }}
-                  transition={{ duration: 1 }}
-                >
-                  💖
-                </motion.div>
-                <p className="font-dancing text-2xl md:text-3xl text-pink-600">
-                  {question.realAnswer}
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+                <span className="opt-label">{String.fromCharCode(65 + i)}</span>
+                <span className="opt-text">{opt}</span>
+              </motion.button>
+            );
+          })}
+        </div>
 
-        <motion.div
-          className="flex justify-center mt-8 gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          {questions.map((_, index) => (
-            <div
-              key={`progress-${index}`}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentQuestion
-                  ? 'bg-hot-pink scale-125'
-                  : index < currentQuestion
-                  ? 'bg-pink-400'
-                  : 'bg-pink-200'
-              }`}
-            />
-          ))}
-        </motion.div>
-      </motion.div>
+        {/* Wrong X overlay */}
+        <div className={`x-overlay ${showX && lastWrongId === q.id ? "visible" : ""}`}>
+          <motion.div
+            key={`x-${q.id}-${wrongAttempts[q.id] || 0}`}
+            initial={{ scale: 0.7, rotate: -10, opacity: 0 }}
+            animate={{ scale: 1.12, rotate: 0, opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ type: "spring", stiffness: 700, damping: 20 }}
+            className="x-badge"
+          >
+            ❌
+          </motion.div>
+        </div>
+
+        {/* Reveal / message */}
+        {reveal[q.id] && (
+          <motion.div
+            className="reveal-box"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45 }}
+          >
+            <p className="reveal-text">{q.revealText ?? "The real answer is… everything about you."}</p>
+            <div className="reveal-cta">
+              {current < QUESTIONS.length - 1 ? (
+                <button className="next-btn" onClick={() => { setCurrent((c) => c + 1); }}>
+                  Next question →
+                </button>
+              ) : (
+                <button className="next-btn" onClick={() => { /* maybe open final surprise */ }}>
+                  Finish ❤️
+                </button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </div>
+
+      <style jsx>{`
+        .quiz-section {
+          display: flex;
+          justify-content: center;
+          padding: 28px 16px;
+        }
+        .quiz-card {
+          width: 100%;
+          max-width: 880px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,249,250,0.9));
+          border-radius: 16px;
+          padding: 20px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+          position: relative;
+          overflow: hidden;
+        }
+        .quiz-title{
+          margin:0 0 8px 0;
+          font-weight:600;
+          color:#FF4FA3;
+        }
+        .quiz-question{
+          margin:0 0 16px 0;
+          font-size:1.2rem;
+        }
+        .options{
+          display:grid;
+          grid-template-columns: 1fr 1fr;
+          gap:12px;
+          margin-bottom:12px;
+        }
+        .option-btn{
+          display:flex;
+          align-items:center;
+          gap:12px;
+          padding:12px;
+          border-radius:10px;
+          border:1px solid rgba(0,0,0,0.06);
+          background:#fff;
+          cursor:pointer;
+          font-size:0.98rem;
+          box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+        }
+        .option-btn[aria-disabled="true"]{
+          opacity:0.6;
+          cursor:default;
+        }
+        .opt-label{
+          min-width:28px;
+          height:28px;
+          border-radius:8px;
+          background:linear-gradient(180deg,#fff,#ffeef7);
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          font-weight:700;
+          color:#ff2d8a;
+        }
+        .x-overlay{
+          position:absolute;
+          inset:0;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          pointer-events:none;
+          opacity:0;
+          transition: opacity 160ms ease;
+        }
+        .x-overlay.visible{
+          opacity:1;
+        }
+        .x-badge{
+          font-size:84px;
+          filter: drop-shadow(0 8px 20px rgba(255,20,100,0.18));
+        }
+        .reveal-box{
+          margin-top:12px;
+          padding:12px;
+          border-radius:10px;
+          background:linear-gradient(90deg,#fff0f6,#fff8fb);
+          border:1px solid rgba(255,105,180,0.12);
+        }
+        .reveal-text{
+          margin:0;
+          font-weight:600;
+          color:#b00066;
+        }
+        .next-btn{
+          margin-top:10px;
+          background:#ff69b4;
+          color:#fff;
+          border:none;
+          font-weight:700;
+          padding:8px 14px;
+          border-radius:10px;
+          cursor:pointer;
+        }
+      `}</style>
     </section>
-  )
+  );
 }

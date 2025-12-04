@@ -3,12 +3,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-// Import the four images from attached_assets
-import img1 from '../attached_assets/image_1764846659057.png'
-import img2 from '../attached_assets/WhatsApp Image 2025-12-04 at 21.27.51.jpeg'
-import img3 from '../attached_assets/WhatsApp Image 2025-12-04 at 21.27.52.jpeg'
-import img4 from '../attached_assets/WhatsApp Image 2025-12-04 at 21.28.40.jpeg'
-
 type Photo = {
   id: number
   caption: string
@@ -18,12 +12,12 @@ type Photo = {
 export default function PhotoGallery() {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
 
-  // Use the four provided images and remove other placeholders
+  // Use the four images from public/attached_assets folder
   const photos: Photo[] = [
-    { id: 1, caption: 'Us ❤️', src: img1 as unknown as string },
-    { id: 2, caption: 'That smile 😊', src: img2 as unknown as string },
-    { id: 3, caption: 'Best day 🌸', src: img3 as unknown as string },
-    { id: 4, caption: 'More memories 📸', src: img4 as unknown as string },
+    { id: 1, caption: 'That smile 😊', src: '/attached_assets/WhatsApp Image 2025-12-04 at 21.28.40.jpeg' },
+    { id: 2, caption: 'us UwU', src: '/attached_assets/WhatsApp Image 2025-12-04 at 21.27.52.jpeg' },
+    { id: 3, caption: 'my beautifull baby 🌸', src: '/attached_assets/WhatsApp Image 2025-12-04 at 21.27.52.jpeg' },
+    { id: 4, caption: ' 📸', src: '/attached_assets/WhatsApp Image 2025-12-04 at 21.27.51.jpeg' },
   ]
 
   return (
