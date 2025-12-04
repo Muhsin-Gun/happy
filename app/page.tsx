@@ -34,11 +34,9 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true)
-    const unlocked = localStorage.getItem('birthday_unlocked')
-    if (unlocked === 'true') {
-      setPageState('landing')
-      setShowCurtain(false)
-    }
+    // Always start fresh - show countdown and curtains every time
+    // Remove any previous unlock state
+    localStorage.removeItem('birthday_unlocked')
   }, [])
 
   const handleCountdownComplete = useCallback(() => {

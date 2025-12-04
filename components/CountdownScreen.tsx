@@ -48,25 +48,41 @@ export default function CountdownScreen({ targetDate, onComplete, onPadlockClick
   useEffect(() => {
     const target = new Date(targetDate).getTime()
     
-    const checkIfComplete = () => {
+    const calculateTimeLeft = () => {
       const now = new Date().getTime()
       const difference = target - now
 
       if (difference <= 0) {
-        setIsComplete(true)
-        setTimeout(onComplete, 3000)
-        return true
+        return { days: 0, hours: 0, minutes: 0, seconds: 0, isComplete: true }
       }
-      return false
+
+      return {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((difference % (1000 * 60)) / 1000),
+        isComplete: false
+      }
     }
 
-    if (checkIfComplete()) return
+    // Calculate immediately on mount
+    const initial = calculateTimeLeft()
+    if (initial.isComplete) {
+      setIsComplete(true)
+      setTimeout(onComplete, 3000)
+      return
+    }
+    setTimeLeft({
+      days: initial.days,
+      hours: initial.hours,
+      minutes: initial.minutes,
+      seconds: initial.seconds
+    })
 
     const timer = setInterval(() => {
-      const now = new Date().getTime()
-      const difference = target - now
-
-      if (difference <= 0) {
+      const result = calculateTimeLeft()
+      
+      if (result.isComplete) {
         clearInterval(timer)
         setIsComplete(true)
         setTimeout(onComplete, 3000)
@@ -74,10 +90,10 @@ export default function CountdownScreen({ targetDate, onComplete, onPadlockClick
       }
 
       setTimeLeft({
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((difference % (1000 * 60)) / 1000)
+        days: result.days,
+        hours: result.hours,
+        minutes: result.minutes,
+        seconds: result.seconds
       })
     }, 1000)
 

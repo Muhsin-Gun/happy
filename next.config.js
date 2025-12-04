@@ -6,10 +6,10 @@ const nextConfig = {
     unoptimized: true,
   },
   allowedDevOrigins: [
-    '*.replit.dev',
-    '*.repl.co',
-    '*.janeway.replit.dev',
-    'localhost:5000',
+    'localhost',
+    '127.0.0.1',
+    '.replit.dev',
+    '.repl.co',
   ],
   async headers() {
     return [
